@@ -321,7 +321,7 @@ const bloodY=n=>!n.s?n.y:(n.anchor==="s"?botY(n):topY(n));
 const inX=n=>n.x-(n.s?PAD:0),outX=n=>n.x+CW+(n.s?PAD:0);
 function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e}
 function path(d,cls){return el("path",{class:"edge"+(cls?" "+cls:""),d},eL)}
-function curve(x1,y1,x2,y2,cls){const m=(x1+x2)/2;return path(`M${x1},${y1}C${m},${y1} ${m},${y2} ${x2},${y2}`,cls)}
+function curve(x1,y1,x2,y2,cls){const m=Math.round((x1+x2)/2);return path(`M${x1},${y1}H${m}V${y2}H${x2}`,cls)}
 // x = left edge, my = vertical centre; per.cx/per.cy = centre x / top y
 function card(per,x,my){
   per.vis=1;per.cx=x+CW/2;per.cy=my-CH/2;
