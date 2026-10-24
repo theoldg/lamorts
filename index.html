@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Lamort de Gail Family Tree</title>
+<title>Arbre Lamort de Gail</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
@@ -43,7 +43,7 @@ h1{font:600 1.4rem var(--f-name);margin:0;letter-spacing:.01em}
 .theme:hover{border-color:var(--accent)}
 .theme svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .theme .sun{display:none}.dark .theme .sun{display:inline}.dark .theme .moon{display:none}
-.search{flex:none;display:flex;align-items:center;gap:8px;font:400 14px var(--f-ui);padding:7px 14px 7px 11px;border-radius:99px;border:1px solid var(--cardline);background:var(--paper);color:var(--muted);width:220px;cursor:text;text-align:left}
+.search{flex:none;display:flex;align-items:center;gap:8px;font:400 14px var(--f-ui);padding:7px 14px 7px 11px;border-radius:99px;border:1px solid var(--cardline);background:var(--paper);color:var(--muted);width:240px;cursor:text;text-align:left;white-space:nowrap;overflow:hidden}
 .search:hover{border-color:var(--accent)}
 .search svg,.pkhd svg{flex:none;width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2}
 
@@ -151,37 +151,37 @@ h1{font:600 1.4rem var(--f-name);margin:0;letter-spacing:.01em}
 <body>
 <header>
   <div class="top"><h1>Lamort de Gail</h1><span class="sub" id="sub"></span>
-    <button class="search" id="q"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Find a person…</button>
-    <button id="theme" class="theme" aria-label="Switch to dark mode" title="Switch to dark mode"><svg viewBox="0 0 24 24"><path class="moon" d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/><g class="sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg></button></div>
+    <button class="search" id="q"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Rechercher une personne…</button>
+    <button id="theme" class="theme" aria-label="Passer en mode sombre" title="Passer en mode sombre"><svg viewBox="0 0 24 24"><path class="moon" d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/><g class="sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg></button></div>
 </header>
 <div id="vp">
-  <svg id="svg" aria-label="Family tree"><g id="world"></g></svg>
+  <svg id="svg" aria-label="Arbre généalogique"><g id="world"></g></svg>
   <div class="ctl">
-    <button id="zin" aria-label="Zoom in" title="Zoom in">+</button>
-    <button id="zout" aria-label="Zoom out" title="Zoom out">−</button>
-    <button id="zfit" aria-label="Fit whole tree" title="Fit whole tree"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    <button id="zin" aria-label="Zoom avant" title="Zoom avant">+</button>
+    <button id="zout" aria-label="Zoom arrière" title="Zoom arrière">−</button>
+    <button id="zfit" aria-label="Voir tout l'arbre" title="Voir tout l'arbre"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
     <hr>
-    <button id="xall" aria-label="Unfold all branches" title="Unfold all branches"><svg viewBox="0 0 24 24"><path d="m7 9 5 5 5-5M7 4l5 5 5-5M5 20h14"/></svg></button>
-    <button id="call" aria-label="Fold all branches" title="Fold all branches"><svg viewBox="0 0 24 24"><path d="m7 15 5-5 5 5M7 20l5-5 5 5M5 4h14"/></svg></button>
+    <button id="xall" aria-label="Déplier toutes les branches" title="Déplier toutes les branches"><svg viewBox="0 0 24 24"><path d="m7 9 5 5 5-5M7 4l5 5 5-5M5 20h14"/></svg></button>
+    <button id="call" aria-label="Replier toutes les branches" title="Replier toutes les branches"><svg viewBox="0 0 24 24"><path d="m7 15 5-5 5 5M7 20l5-5 5 5M5 4h14"/></svg></button>
   </div>
   <div class="legend">
-    <span><i style="--c:var(--lam)"></i>Lamort</span><span><i style="--c:var(--gail)"></i>de Gail</span><span><i style="--c:var(--pon)"></i>Pondrom</span><span><i style="--c:var(--hoef)"></i>Hoefnagel</span><span><i style="--c:var(--oth)"></i>other</span>
-    <span><i class="ok"></i>public records</span><span><i class="unc"></i>unclear</span>
+    <span><i style="--c:var(--lam)"></i>Lamort</span><span><i style="--c:var(--gail)"></i>de Gail</span><span><i style="--c:var(--pon)"></i>Pondrom</span><span><i style="--c:var(--hoef)"></i>Hoefnagel</span><span><i style="--c:var(--oth)"></i>autres</span>
+    <span><i class="ok"></i>archives publiques</span><span><i class="unc"></i>incertain</span>
   </div>
-  <div id="relbar" hidden><span id="reltxt"></span><span class="rb"><button id="relswap"></button><button id="relx">✕ Full tree</button></span></div>
+  <div id="relbar" hidden><span id="reltxt"></span><span class="rb"><button id="relswap"></button><button id="relx">✕ Arbre complet</button></span></div>
   <div id="picker" hidden role="dialog" aria-modal="true" aria-labelledby="pkt"><div class="pk">
     <div class="pkt" id="pkt"></div>
     <div class="pkhd"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input id="pkq" type="search" placeholder="Type a name…" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Name" aria-controls="pkl"><button id="pkx">Cancel</button></div>
+      <input id="pkq" type="search" placeholder="Tapez un nom…" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Nom" aria-controls="pkl"><button id="pkx">Annuler</button></div>
     <ul id="pkl" role="listbox"></ul></div></div>
-  <div id="sheet" hidden><button class="close" id="close" aria-label="Close">✕</button><div class="in" id="sheetIn"></div></div>
+  <div id="sheet" hidden><button class="close" id="close" aria-label="Fermer">✕</button><div class="in" id="sheetIn"></div></div>
 </div>
 
 <script type="module">
 /* ---------- theme ---------- */
 const root=document.documentElement,mq=matchMedia("(prefers-color-scheme: dark)"),tb=document.getElementById("theme");
 function setTheme(t){if(t)root.dataset.theme=t;const dark=t?t==="dark":mq.matches;root.classList.toggle("dark",dark);
-  const l=`Switch to ${dark?"light":"dark"} mode`;tb.setAttribute("aria-label",l);tb.title=l}
+  const l=`Passer en mode ${dark?"clair":"sombre"}`;tb.setAttribute("aria-label",l);tb.title=l}
 try{setTheme(localStorage.getItem("theme"))}catch(e){setTheme(null)}
 mq.addEventListener("change",()=>{if(!root.dataset.theme)setTheme(null)});
 tb.onclick=()=>{const t=root.classList.contains("dark")?"light":"dark";setTheme(t);try{localStorage.setItem("theme",t)}catch(e){}};
@@ -190,7 +190,7 @@ tb.onclick=()=>{const t=root.classList.contains("dark")?"light":"dark";setTheme(
 /* ---------- data (data.json) ---------- */
 let D;
 try{D=await fetch("data.json").then(r=>{if(!r.ok)throw Error(r.status);return r.json()})}
-catch(e){document.getElementById("sub").textContent="Could not load data.json. Open this page through a web server, not as a file.";throw e}
+catch(e){document.getElementById("sub").textContent="Impossible de charger data.json. Ouvrez cette page par un serveur web, pas comme un fichier.";throw e}
 const SRC=D.sources,[lam,pon]=D.trees;
 
 /* ---------- model ---------- */
@@ -263,8 +263,8 @@ function couple(x,my,a,b){
 function toggle(n){const open=n.open!==false,t=open?"−":"+"+n.cnt,w=open?20:14+t.length*7,cx=outX(n)+8+w/2;
   el("line",{class:"edge",x1:outX(n),x2:cx-w/2,y1:n.y,y2:n.y},eL);
   const g=el("g",{class:"tog"+(open?"":" shut"),"data-nid":n.nid,transform:`translate(${cx},${n.y})`,tabindex:0,role:"button",
-    "aria-label":`${open?"Fold":"Unfold"} descendants of ${fullName(n.p)}`},tL);
-  el("title",{},g).textContent=open?"Fold this branch":`Show ${n.cnt} more`;
+    "aria-label":`${open?"Replier":"Déplier"} les descendants ${de(fullName(n.p))}`},tL);
+  el("title",{},g).textContent=open?"Replier cette branche":`Afficher ${n.cnt} de plus`;
   el("rect",{x:-w/2,y:-10,width:w,height:20,rx:10},g);el("text",{y:4,"text-anchor":"middle"},g).textContent=t;
   return cx+w/2}
 function draw(n){
@@ -294,11 +294,11 @@ function render(){
   couple(X(1),py,E.pondromF,E.servais);curve(X(1)+CW+PAD,py,inX(pon),E.jbp.cy+CH/2,"unc");
   couple(X(2),acy,E.alex,E.claireU);curve(X(2)+CW+PAD,acy,X(1),thY,"unc");
   card(E.balth,X(3),thY-40);curve(X(3)+CW,thY-40,X(2)-PAD,thY,"dot");
-  el("text",{x:X(3)+CW+8,y:thY-48,class:"lbl"},eL).textContent="… generations";
+  el("text",{x:X(3)+CW+8,y:thY-48,class:"lbl"},eL).textContent="… générations";
   couple(X(3),thY+130,E.charl,E.humyn);
   el("text",{x:X(3),y:thY-110,class:"band"},eL).textContent="Hoefnagel · Schutbourg";
   el("text",{x:-60,y:lam.y+14,class:"band","text-anchor":"end"},eL).textContent="Lamort · Nancy, Metz, Luxembourg";
-  el("text",{x:pon.x-60,y:thY+300,class:"band","text-anchor":"end"},eL).textContent="Pondrom · Hosingen, Saint-Louis & Dallas";
+  el("text",{x:pon.x-60,y:thY+300,class:"band","text-anchor":"end"},eL).textContent="Pondrom · Hosingen, Saint-Louis et Dallas";
   applySel();
 }
 
@@ -354,36 +354,48 @@ function applySel(){world.classList.toggle("focusing",!!sel&&!rel);
 const chip=q=>`<button data-go="${q.id}" class="f-${fam(q)}"><i></i>${esc(q.g==="—"?fullName(q):q.g.replace(/ \?$/,""))}</button>`;
 const group=(t,list)=>list.length?`<h3>${t}</h3><div class="rel">${list.map(chip).join("")}</div>`:"";
 function show(id){const p=people[id],had=!sheet.hidden;sel=p;lin=lineage(p);applySel();
-  const tag=p.st==="rec"?'<span class="tg rec">Found in public records</span>':p.st==="unc"?'<span class="tg unc">Unclear or conflicting</span>':'<span class="tg">From family sources</span>';
+  const tag=p.st==="rec"?'<span class="tg rec">Trouvé dans les archives publiques</span>':p.st==="unc"?'<span class="tg unc">Incertain ou contradictoire</span>':'<span class="tg">Sources familiales</span>';
   const sp=spouse(p);
   sin.innerHTML=`<div class="hd"><div class="big f-${fam(p)}">${esc(initials(p))}</div><div><h2>${esc(fullName(p))}</h2>${p.d?`<div class="d">${esc(p.d)}</div>`:""}</div></div>
    <div class="tags">${tag}${p.mpf?'<span class="tg mp">Mort pour la France</span>':""}</div>
    ${p.facts?`<ul>${p.facts.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>`:""}
-   ${group("Parents",parents(p))}${group("Spouse",sp?[sp]:[])}${group("Children",children(p))}
-   <h3>Relationship</h3><button class="search cmp" id="cmp"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>How is ${esc(p.g.replace(/ \?$/,""))} related to…</button>
-   <div class="src">Sources: ${(p.src||[]).map(srcHTML).join(" · ")}</div>`;
+   ${group("Parents",parents(p))}${group(sp?cap(G(EP,sp.x)):"",sp?[sp]:[])}${group("Enfants",children(p))}
+   <h3>Lien de parenté</h3><button class="search cmp" id="cmp"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Lien ${esc(de(given(p)))} avec…</button>
+   <div class="src">Sources : ${(p.src||[]).map(srcHTML).join(" · ")}</div>`;
   sheet.hidden=false;sheet.scrollTop=0;
   // keep the person in view once the panel opens
   if(!had){const {w,h}=area(),sx=T.x+p.cx*T.k,sy=T.y+(p.cy+CH/2)*T.k;if(sx<60||sx>w-60||sy<40||sy>h-40)focus(p)}}
 function closeSheet(){if(sheet.hidden&&!sel)return;sheet.hidden=true;sel=lin=null;applySel()}
-sin.addEventListener("click",e=>{if(e.target.closest("#cmp")){const a=sel;return pick(`How is ${sname(a)} related to…`,o=>startRel(a,o),a)}const b=e.target.closest("[data-go]");if(b)go(people[+b.dataset.go])});
+sin.addEventListener("click",e=>{if(e.target.closest("#cmp")){const a=sel;return pick(`Lien de parenté ${de(sname(a))} avec…`,o=>startRel(a,o),a)}const b=e.target.closest("[data-go]");if(b)go(people[+b.dataset.go])});
 document.getElementById("close").onclick=closeSheet;
 
 /* ---------- relationship between two people ---------- */
 let rel=null;
 const relbar=document.getElementById("relbar"),reltxt=document.getElementById("reltxt");
 const sname=p=>p.g==="—"?fullName(p):[given(p),p.fsn].filter(Boolean).join(" ");
-const ord=n=>["first","second","third","fourth","fifth","sixth","seventh","eighth"][n-1]||n+"th";
-const times=n=>n===1?"once":n===2?"twice":n+" times";
-const greats=n=>n<=0?"":n===1?"great-":n===2?"great-great-":`${n}× great-`;
-// what someone b generations below a shared ancestor is to someone a generations below it
-function term(a,b){
-  if(a===0)return b===1?"child":greats(b-2)+"grandchild";
-  if(b===0)return a===1?"parent":greats(a-2)+"grandparent";
-  if(a===1&&b===1)return "sibling";
-  if(a===1)return b===2?"niece/nephew":greats(b-3)+"grandniece/nephew";
-  if(b===1)return a===2?"aunt/uncle":greats(a-2)+"aunt/uncle";
-  const r=Math.abs(a-b);return `${ord(Math.min(a,b)-1)} cousin${r?` ${times(r)} removed`:""}`}
+// French words come in three forms: [masculine, feminine, sex unknown]
+const G=(w,x)=>w[x==="m"?0:x==="f"?1:2];
+const cap=t=>t[0].toUpperCase()+t.slice(1);
+const vow=t=>/^[aeiouyéèêîôh]/i.test(t);
+const de=t=>(vow(t)?"d’":"de ")+t;
+// "le neveu", "l’oncle"; with the sex unknown French drops the article ("est cousin(e) de …")
+const art=(t,x)=>x?(vow(t)?"l’":x==="f"?"la ":"le ")+t:t;
+const deArt=(t,x)=>x?(vow(t)?"de l’":x==="f"?"de la ":"du ")+t:"de "+t;
+const poss=(t,x)=>x?(x==="f"&&!vow(t)?"sa ":"son ")+t:t;
+const EP=["époux","épouse","conjoint(e)"];
+const nth=n=>n===1?"1re":n+"e";
+const arr=n=>"arrière-".repeat(n);
+// what someone b generations below a shared ancestor is to someone a generations below it, for sex x;
+// tail is said after the other person's name
+function term(a,b,x){const g=w=>G(w,x),e=g(["","e","(e)"]);
+  if(a===0)return b>=5?`descendant${e} à la ${nth(b)} génération`:b===1?g(["fils","fille","enfant"]):arr(b-2)+g(["petit-fils","petite-fille","petit-enfant"]);
+  if(b===0)return a>=5?`ancêtre à la ${nth(a)} génération`:a===1?g(["père","mère","parent"]):arr(a-2)+g(["grand-père","grand-mère","grand-parent"]);
+  if(a===1&&b===1)return g(["frère","sœur","frère ou sœur"]);
+  if(a===1)return b>=5?`descendant${e} à la ${nth(b-1)} génération d’un frère ou d’une sœur`:b===2?g(["neveu","nièce","neveu ou nièce"]):arr(b-3)+g(["petit-neveu","petite-nièce","petit-neveu ou petite-nièce"]);
+  if(b===1)return a>=5?`${g(["frère","sœur","frère ou sœur"])} d’un ancêtre à la ${nth(a-1)} génération`:a===2?g(["oncle","tante","oncle ou tante"]):arr(a-3)+g(["grand-oncle","grand-tante","grand-oncle ou grand-tante"]);
+  const m=Math.min(a,b);
+  return m===2?g(["cousin germain","cousine germaine","cousin(e) germain(e)"]):m===3?g(["cousin issu de germains","cousine issue de germains","cousin(e) issu(e) de germains"]):`${g(["cousin","cousine","cousin(e)"])} au ${m-1}e degré`}
+const tail=(a,b)=>{const m=Math.min(a,b),r=Math.abs(a-b);return m>=2&&r?`, à ${r} génération${r>1?"s":""} d’écart`:""};
 function ups(p){const D=new Map([[p,{d:0,prev:null}]]),q=[p];
   while(q.length){const x=q.shift(),d=D.get(x).d;parents(x).forEach(r=>{if(!D.has(r)){D.set(r,{d:d+1,prev:x});q.push(r)}})}return D}
 // closest shared ancestor of a and b, with the path a → ancestor → b
@@ -396,26 +408,26 @@ function kin(a,b){const A=ups(a),B=ups(b);let k=null;
   const cs=spouse(k.ca);if(cs&&A.get(cs)?.d===k.a&&B.get(cs)?.d===k.b)k.cs=cs;
   return k}
 function relate(A,B){
-  const sA=spouse(A),sB=spouse(B),k=kin(A,B);
-  if(k){const t=term(k.a,k.b);
-    return{...k,text:B===sA?`${sname(B)} is ${sname(A)}’s spouse, and also their ${t}.`:`${sname(B)} is ${sname(A)}’s ${t}.`}}
-  if(B===sA)return{path:[A,B],steps:[null,"sp"],text:`${sname(B)} is ${sname(A)}’s spouse.`};
+  const sA=spouse(A),sB=spouse(B),k=kin(A,B),n=sname,ep=p=>G(EP,p.x);
+  if(k){const t=term(k.a,k.b,B.x),tl=tail(k.a,k.b);
+    return{...k,text:B===sA?`${n(B)} est ${art(ep(B),B.x)} ${de(n(A))}, et aussi ${poss(t,B.x)}${tl}.`:`${n(B)} est ${art(t,B.x)} ${de(n(A))}${tl}.`}}
+  if(B===sA)return{path:[A,B],steps:[null,"sp"],text:`${n(B)} est ${art(ep(B),B.x)} ${de(n(A))}.`};
   // related by marriage: try through either spouse
   const opts=[];
   if(sA){const k=kin(sA,B);if(k)opts.push({...k,path:[A,...k.path],steps:[null,"sp",...k.steps.slice(1)],cost:k.a+k.b+1,
-    text:`${sname(B)} is the ${term(k.a,k.b)} of ${sname(A)}’s spouse, ${sname(sA)}.`})}
+    text:`${n(B)} est ${art(term(k.a,k.b,B.x),B.x)} ${deArt(ep(sA),sA.x)} ${de(n(A))}, ${n(sA)}${tail(k.a,k.b)}.`})}
   if(sB){const k=kin(A,sB);if(k)opts.push({...k,path:[...k.path,B],steps:[...k.steps,"sp"],cost:k.a+k.b+1,
-    text:`${sname(B)} is the spouse of ${sname(A)}’s ${term(k.a,k.b)}, ${sname(sB)}.`})}
+    text:`${n(B)} est ${art(ep(B),B.x)} ${deArt(term(k.a,k.b,sB.x),sB.x)} ${de(n(A))}, ${n(sB)}${tail(k.a,k.b)}.`})}
   if(sA&&sB){const k=kin(sA,sB);if(k)opts.push({...k,path:[A,...k.path,B],steps:[null,"sp",...k.steps.slice(1),"sp"],cost:k.a+k.b+2,
-    text:`${sname(B)}’s spouse ${sname(sB)} is the ${term(k.a,k.b)} of ${sname(A)}’s spouse, ${sname(sA)}.`})}
+    text:`${cap(art(ep(sB),sB.x))} ${de(n(B))}, ${n(sB)}, est ${art(term(k.a,k.b,sB.x),sB.x)} ${deArt(ep(sA),sA.x)} ${de(n(A))}, ${n(sA)}${tail(k.a,k.b)}.`})}
   if(opts.length)return opts.sort((x,y)=>x.cost-y.cost)[0];
   // anything else: shortest chain of parent, child and spouse links
   const prev=new Map([[A,null]]),q=[A];
   while(q.length&&!prev.has(B)){const x=q.shift();[...parents(x),...children(x),spouse(x)].forEach(r=>{if(r&&!prev.has(r)){prev.set(r,x);q.push(r)}})}
-  if(!prev.has(B))return{path:[A],steps:[null],text:`No connection found between ${sname(A)} and ${sname(B)}.`};
+  if(!prev.has(B))return{path:[A],steps:[null],text:`Aucun lien trouvé entre ${n(A)} et ${n(B)}.`};
   const path=[];for(let x=B;x;x=prev.get(x))path.unshift(x);
   const steps=path.map((x,i)=>i===0?null:parents(path[i-1]).includes(x)?"up":children(path[i-1]).includes(x)?"down":"sp");
-  return{path,steps,text:`${sname(A)} and ${sname(B)} are connected through ${path.length-1} family links.`}}
+  return{path,steps,text:`${n(A)} et ${n(B)} sont reliés par ${path.length-1} liens familiaux.`}}
 
 // lay the chain out with time left to right: going up a generation moves left, down moves right,
 // and each turn (or marriage) starts a new row
@@ -430,7 +442,7 @@ function drawRel(){
   const ca=rel.ca?Pp.indexOf(rel.ca):-1;
   Pp.forEach((p,i)=>{if(i===ca&&rel.cs)couple(X(i),Y(i)+(CH+SG)/2,p,rel.cs);else card(p,X(i),Y(i))});
   if(ca>=0){const top=rel.cs?Y(ca)-CH/2-PAD:Y(ca)-CH/2;
-    el("text",{x:X(ca)+4,y:top-8,class:"lbl"},eL).textContent=rel.cs?"closest shared ancestors":"closest shared ancestor"}
+    el("text",{x:X(ca)+4,y:top-8,class:"lbl"},eL).textContent=rel.cs?"ancêtres communs les plus proches":"ancêtre commun le plus proche"}
   const out=i=>i===ca&&rel.cs?[X(i)+CW+PAD,Y(i)+(CH+SG)/2]:[X(i)+CW,Y(i)];
   for(let i=1;i<Pp.length;i++){const s=st[i];
     if(s==="sp"){const x=X(i)+CW/2,y1=Math.min(Y(i),Y(i-1))+CH/2,y2=Math.max(Y(i),Y(i-1))-CH/2;
@@ -439,7 +451,7 @@ function drawRel(){
 }
 function startRel(A,B){if(A===B)return;rel={A,B,...relate(A,B)};sheet.hidden=true;sel=lin=null;
   reltxt.textContent=rel.text;relbar.hidden=false;
-  const sw=document.getElementById("relswap");sw.textContent=`⇄ What is ${A.g.replace(/ \?$/,"")} to ${B.g.replace(/ \?$/,"")}?`;sw.title="See the same relationship from the other person’s side";vp.classList.add("relmode");render();fit()}
+  const sw=document.getElementById("relswap");sw.textContent=`⇄ Que représente ${given(A)} pour ${given(B)} ?`;sw.title="Voir le même lien du point de vue de l’autre personne";vp.classList.add("relmode");render();fit()}
 function endRel(){if(!rel)return;const A=rel.A;rel=null;relbar.hidden=true;vp.classList.remove("relmode");reveal(A);render();focus(A,.8,1)}
 document.getElementById("relx").onclick=endRel;
 document.getElementById("relswap").onclick=()=>startRel(rel.B,rel.A);
@@ -465,8 +477,8 @@ function pkList(){const ts=fold(pkq.value).split(/\s+/).filter(Boolean);
   const st=p=>ts.length&&fold(p.g).startsWith(ts[0])?0:1;
   pkHits.sort((a,b)=>st(a)-st(b)||byName(a,b));pkOn=0;
   pkl.innerHTML=pkHits.length?pkHits.map((p,i)=>`<li><button role="option" data-i="${i}" class="f-${fam(p)}${i?"":" on"}"><span class="av">${esc(initials(p))}</span>
-    <span><b>${esc(fullName(p))}</b><small>${esc([p.d,parents(p).length?"child of "+parents(p).map(r=>r.g).join(" & "):spouse(p)?"married to "+sname(spouse(p)):""].filter(Boolean).join(" · "))}</small></span></button></li>`).join("")
-    :`<li class="none">No one matches “${esc(pkq.value)}”.</li>`;pkl.scrollTop=0}
+    <span><b>${esc(fullName(p))}</b><small>${esc([p.d,parents(p).length?"enfant de "+parents(p).map(r=>r.g).join(" et "):spouse(p)?G(["marié","mariée","marié(e)"],p.x)+" à "+sname(spouse(p)):""].filter(Boolean).join(" · "))}</small></span></button></li>`).join("")
+    :`<li class="none">Personne ne correspond à « ${esc(pkq.value)} ».</li>`;pkl.scrollTop=0}
 function pkMove(d){const bs=pkl.querySelectorAll("button");if(!bs.length)return;bs[pkOn].classList.remove("on");pkOn=(pkOn+d+bs.length)%bs.length;bs[pkOn].classList.add("on");bs[pkOn].scrollIntoView({block:"nearest"})}
 function pkChoose(i){const p=pkHits[i],f=pkDone;if(!p)return;pkClose();f(p)}
 pkq.addEventListener("input",pkList);
@@ -476,7 +488,7 @@ pkl.addEventListener("click",e=>{const b=e.target.closest("button");if(b)pkChoos
 document.getElementById("pkx").onclick=pkClose;
 picker.addEventListener("click",e=>{if(e.target===picker)pkClose()});
 document.getElementById("q").onclick=()=>pick("",go);
-document.getElementById("sub").textContent=`${people.filter(p=>p.g!=="—").length} people · tap a card for details, tap ± to fold a branch`;
+document.getElementById("sub").textContent=`${people.filter(p=>p.g!=="—").length} personnes · touchez une fiche pour les détails, ± pour replier une branche`;
 
 render();
 requestAnimationFrame(()=>focus(ern,.8,1));
