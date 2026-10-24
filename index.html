@@ -1,0 +1,355 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>Lamort de Gail Family Tree</title></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: full-screen pan/zoom canvas on laid paper; header with search + branch chips; bottom sheet for details */
+:root{
+  --paper:#eef0ec; --chain:rgba(40,60,80,.07); --ink:#1d2a36; --muted:#5d6b76;
+  --card:#fbfcfa; --line:#8a98a3; --accent:#24506e; --fam:#9aa7b0; --unc:#b8741a; --link:#7a5aa8;
+  --tag:#e1e7e4; --mpf:#8b2f2f; --shadow:rgba(20,35,50,.10);
+  --f-name:"Spectral",Georgia,"Times New Roman",serif;
+  --f-ui:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --f-data:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#141a1f; --chain:rgba(180,200,215,.05); --ink:#e3e8ea; --muted:#93a1ab;
+  --card:#1d252c; --line:#5d6c78; --accent:#8cb8d6; --fam:#56646f; --unc:#e0a253; --link:#b79be0;
+  --tag:#26313a; --mpf:#e08a8a; --shadow:rgba(0,0,0,.35); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141a1f; --chain:rgba(180,200,215,.05); --ink:#e3e8ea; --muted:#93a1ab;
+  --card:#1d252c; --line:#5d6c78; --accent:#8cb8d6; --fam:#56646f; --unc:#e0a253; --link:#b79be0;
+  --tag:#26313a; --mpf:#e08a8a; --shadow:rgba(0,0,0,.35); color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);overflow:hidden;display:flex;flex-direction:column}
+header{display:flex;flex-direction:column;gap:8px;padding-block:10px 8px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  border-bottom:1px solid var(--chain);background:var(--paper);z-index:2}
+.top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--f-name);font-weight:600;font-size:1.35rem;margin:0}
+.legend{margin-left:auto;display:flex;gap:12px;font-size:.75rem;color:var(--muted);align-items:center;flex-wrap:wrap}
+.legend i{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px;background:var(--card);border:1.5px solid var(--accent)}
+.legend i.fam{border-color:var(--fam)} .legend i.unc{border:1.5px dashed var(--unc)}
+.tools{display:flex;gap:8px;align-items:center;min-width:0}
+#q{font:400 14px var(--f-ui);padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:180px;flex:none}
+#q:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.chips{display:flex;gap:6px;overflow-x:auto;min-width:0;scrollbar-width:none}
+.chips button{flex:none;font:500 12px var(--f-ui);padding:5px 10px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;white-space:nowrap}
+.chips button:focus-visible,.ctl button:focus-visible,.close:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+#vp{position:relative;flex:1;min-height:0;touch-action:none;cursor:grab;background-color:var(--paper);
+  background-image:repeating-linear-gradient(90deg,transparent 0 63px,var(--chain) 63px 64px),repeating-linear-gradient(0deg,transparent 0 2px,var(--chain) 2px 3px)}
+#vp.drag{cursor:grabbing}
+svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.edge{fill:none;stroke:var(--line);stroke-width:1.4}
+.edge.unc{stroke-dasharray:5 4;stroke:var(--unc)}
+.edge.lane{stroke:var(--link);stroke-dasharray:7 4;stroke-width:1.8}
+.edge.dot{stroke-dasharray:2 5;stroke-width:1.6}
+.lbl{font-family:var(--f-ui);font-size:11px;fill:var(--link);font-style:italic}
+.card rect{fill:var(--card);stroke:var(--fam);stroke-width:1.3;filter:drop-shadow(0 1px 2px var(--shadow))}
+.card.rec rect{stroke:var(--accent);stroke-width:1.6}
+.card.unc rect{stroke:var(--unc);stroke-dasharray:5 3}
+.card:hover rect,.card.sel rect{stroke-width:2.6}
+.card.hl rect{stroke:var(--link);stroke-width:3}
+.card{cursor:pointer}
+.nm{font-family:var(--f-name);font-size:16px;fill:var(--ink);font-weight:600}
+.sn{font-family:var(--f-ui);font-size:9px;fill:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.dt{font-family:var(--f-data);font-size:10.5px;fill:var(--muted)}
+.mpf{font-family:var(--f-ui);font-size:8.5px;font-weight:600;fill:var(--mpf);letter-spacing:.08em}
+.inf{font-family:var(--f-name);font-size:14px;fill:var(--muted)}
+.band{font-family:var(--f-name);font-size:44px;fill:var(--muted);opacity:.35;font-style:italic}
+
+.ctl{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:12px;display:flex;flex-direction:column;gap:6px;z-index:3}
+.ctl button{font:500 15px var(--f-ui);width:38px;height:38px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.ctl .fit{font-size:11px}
+#sheet{position:absolute;left:0;right:0;bottom:0;z-index:4;background:var(--card);border-top:1px solid var(--line);box-shadow:0 -6px 24px var(--shadow);max-height:58%;overflow:auto;
+  padding-block:16px calc(18px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+#sheet .in{max-width:62ch;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+#sheet h2{font-family:var(--f-name);font-weight:600;font-size:1.3rem;margin:0;text-wrap:balance;padding-right:40px}
+#sheet .d{font-family:var(--f-data);font-size:.85rem;color:var(--muted)}
+#sheet ul{margin:0;padding-left:1.1em;line-height:1.5;font-size:.92rem}
+#sheet .tags{display:flex;gap:6px;flex-wrap:wrap}
+#sheet .tg{font-size:.72rem;padding:2px 8px;border-radius:99px;background:var(--tag);color:var(--ink)}
+#sheet .tg.unc{color:var(--unc)} #sheet .tg.mp{color:var(--mpf)} #sheet .tg.rec{color:var(--accent)}
+#sheet .src{font-size:.78rem;color:var(--muted);line-height:1.5}
+#sheet a{color:var(--accent)}
+.rel{display:flex;gap:6px;flex-wrap:wrap}
+.rel button{font:500 12px var(--f-ui);padding:3px 9px;border-radius:99px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.close{position:absolute;top:10px;right:max(12px,env(safe-area-inset-right,0px));width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-size:16px;cursor:pointer}
+@media (max-width:560px){.legend{margin-left:0;width:100%}#q{width:130px}}
+</style>
+
+<header>
+  <div class="top">
+    <h1>Lamort de Gail</h1>
+    <div class="legend"><span><i></i>public records</span><span><i class="fam"></i>family wall &amp; printout</span><span><i class="unc"></i>unclear or conflicting</span></div>
+  </div>
+  <div class="tools">
+    <input id="q" list="names" placeholder="Find a person…" autocomplete="off" aria-label="Find a person">
+    <datalist id="names"></datalist>
+    <div class="chips" id="chips"></div>
+  </div>
+</header>
+<div id="vp">
+  <svg id="svg" aria-label="Family tree"><g id="world"></g></svg>
+  <div class="ctl">
+    <button id="zin" aria-label="Zoom in">+</button>
+    <button id="zout" aria-label="Zoom out">−</button>
+    <button id="zfit" class="fit" aria-label="Fit whole tree">FIT</button>
+  </div>
+  <div id="sheet" hidden><button class="close" id="close" aria-label="Close">✕</button><div class="in" id="sheetIn"></div></div>
+</div>
+
+<script>
+const SRC={
+  wall:["Family wall tree (photos, Oct 2026)",null],
+  table:["Family tree printout (email, Oct 2026)",null],
+  sketch:["Your first sketch",null],
+  maitron:["Maitron – Claude Lamort de Gail","https://maitron.fr/lamort-de-gail-claude-eugene-jacques/"],
+  pierfit:["Geneanet Pierfit – Ernest Lamort","https://gw.geneanet.org/pierfit?lang=fr&n=lamort&p=ernest"],
+  pierfitC:["Geneanet Pierfit – Claude Lamort de Gail","https://gw.geneanet.org/pierfit?amp=&amp=&amp=&lang=fr&n=lamort+de+gail&oc=0&p=claude+eugene+jacques"],
+  pierfitCl:["Geneanet Pierfit – Claire de Gail","https://gw.geneanet.org/pierfit?amp=&amp=&lang=en&n=de+gail&p=claire"],
+  vdl:["Ville de Luxembourg – Lamort-Pescatore tomb","https://www.vdl.lu/en/visiting/art-and-culture/architecture-et-patrimoine/tombes-remarquables/lamort-pescatore-family"],
+  mldg:["Geneanet mldg75 – Marc & Odette Châtel","https://gw.geneanet.org/mldg75?lang=fr&n=lamort+de+gail&oc=0&p=marc+raphael+bruno"],
+  mersch:["Jules Mersch, « La famille Lamort »","http://elamortdegail.free.fr/LAMORT_JM2.pdf"],
+  deces:["Registre des décès – Lamort de Gail","https://www.deces-en-france.fr/annuaires/noms-de-famille/602844-lamort-de-gail"],
+  avis:["Avis de décès – Dominique Lamort de Gail","https://avis-de-deces.breizh-funeraire.fr/avis-de-deces/dominique-marc-andre-yves-lamort-de-gail-rennes-8cbe4f73"],
+  couzy:["Wikipedia – Jean Couzy","https://en.wikipedia.org/wiki/Jean_Couzy"],
+  jr:["La Jaune et la Rouge – Jean Couzy (X42)","https://www.lajauneetlarouge.com/jean-couzy-42-un-alpiniste-dexception-des-pyrenees-a-lhimalaya/"],
+  glenat:["Glénat – Agnès Couzy","https://www.glenat.com/auteur/agnes-couzy/"],
+  lu:["industrie.lu – Papeteries Lamort","https://www.industrie.lu/lamort.html"]
+};
+// st: rec = public records, fam = family wall/printout, unc = unclear
+function P(g,sn,d,o={}){return Object.assign({g,sn,d,st:"fam",src:["wall"]},o)}
+const T2=["table","wall"];
+const L=(g,d,o)=>P(g,null,d,o); // Lamort de Gail descendants, surname implied
+
+/* ---------- Jacques Lamort & Marie Françoise Brusseaux ---------- */
+const ernestClaire={anchor:"s",
+ p:P("Ernest","Lamort","1879–1947",{st:"rec",full:"Ernest Paul Marie Lamort",
+   facts:["Born 26 May 1879, Manternach (Luxembourg)","Civil engineer; director of the Jeand'heurs paper mill","Ran the Établissements Lamort at Vitry-le-François with his brother Marcel and son Claude","Married Claire de Gail, 11 Dec 1905, Épinal. They were second cousins: his grandfather Jacques and her grandfather Jules were brothers","Died 10 Oct 1947, Vitry-le-François"],src:["table","pierfit","maitron","mersch","lu"]}),
+ s:P("Claire","de Gail","1880–1972",{st:"rec",full:"Claire Caroline de Gail",facts:["Gave the family its double name","Records give 1881 for her birth; the printout gives 1880"],src:["table","pierfitCl","maitron"]}),
+ c:[
+  {p:L("Claude","1906–1944",{st:"rec",mpf:1,full:"Claude Eugène Jacques Lamort de Gail",
+     facts:["Born 17 Dec 1906, Lisle-en-Rigault (Meuse)","Industrialist; reserve officer in the Armée de l'Air, fought May–June 1940","Lieutenant in the Maquis des Chênes; captured 29 Aug 1944 at Matignicourt, never seen again","Mort pour la France; a stadium and a street in Vitry-le-François bear his name"],src:["table","maitron","pierfitC"]}),
+   s:P("Christiane “Anny”","Le Pelley du Manoir","1909–1943",{st:"rec",full:"Christiane Odette Alix Anny Le Pelley Dumanoir",facts:["Married Claude 7 Jan 1935, Paris 16e","Died 19 May 1943"],src:["table","maitron"]}),
+   c:[
+    {p:L("Dominique","1936–2024",{st:"rec",full:"Dominique Marc André Yves Lamort de Gail",facts:["Died 15 May 2024; buried in Baden (Morbihan)","4 children, 14 grandchildren, 6 great-grandchildren at his death"],src:["table","avis","deces"]}),
+     c:[{p:L("Marie-Agnès",null,{st:"rec",src:["avis","wall"]}),c:[{p:L("Luc")},{p:L("Nicolas")},{p:L("Clara")}]},
+        {p:L("Frédérique",null,{st:"rec",src:["avis","wall"]})},{p:L("Mathilde",null,{st:"rec",src:["avis","wall"]})},{p:L("Jérôme",null,{st:"rec",src:["avis","wall"]})}]},
+    {p:L("Patrick","1937–",{src:T2,facts:["Wall card: “& Béatrice de Lataite × Suzanne”, which may mean a second union"]}),s:P("Béatrice","de Lataite",null),
+     c:[{p:L("Éric"),s:P("Marie-Alix",null,null),c:[{p:L("Quitterie")},{p:L("Tugdual")},{p:L("Melchior")}]},{p:L("Karine")},{p:L("Claire")},{p:L("Sophie")}]},
+    {p:L("France","1939–2026",{src:T2,facts:["Photographed in Dallas in 1972 with Mary Ann Pondrom"]}),s:P("Jean-François","Magnan",null,{src:["wall","sketch"]}),
+     c:[{p:P("Thierry","Magnan",null,{src:["sketch"]})},{p:P("Patrick","Magnan",null,{src:["sketch"]})},{p:P("Raphaëlle","Magnan",null,{src:["wall","sketch"]})},{p:P("?","Magnan",null,{st:"unc",facts:["The wall shows four children; only three names are known"]})}]}
+   ]},
+  {p:L("Marc","1908–2009",{st:"rec",full:"Marc Charles Marie Lamort de Gail",facts:["Born 15 Jun 1908","Admitted to École Centrale, 1928","Joined the Maquis des Chênes with Claude; FFI and FFC (Jean Millet / Buckmaster network)","Officier de la Légion d'honneur","Died 5 Apr 2009 aged 100; buried Vitry-le-François"],src:["table","maitron","pierfit","deces","mersch","lu"]}),
+   s:P("Odette","Châtel","1915–2006",{st:"rec",full:"Odette Marie-Pierre Châtel",facts:["Married Marc in 1936"],src:["mldg","wall"]}),
+   c:[{p:L("Bruno","†",{st:"rec",full:"Bruno Marie Noël Lamort de Gail",src:["deces","mldg","wall"]})},
+      {p:L("Alain","†",{st:"rec",full:"Alain Marie Lamort de Gail",src:["deces","wall"]}),c:[{p:L("Étienne"),c:[{p:L("Noé")}]},{p:L("Vincent"),c:[{p:L("Théodore")},{p:L("Clémentine")},{p:L("Eustache")},{p:L("Lucie")}]}]},
+      {p:L("Bénédicte"),c:[{p:P("Loïc","Mondet",null)}]},{p:L("Martine")},{p:L("Sylvie")}]},
+  {p:L("Anne “Manette”","1917–1929",{st:"rec",full:"Anne Lamort de Gail",src:["table","pierfitC","wall"]})},
+  {p:L("Lise","1924–2010",{st:"rec",full:"Lise Georgette Thérèse Lamort de Gail",src:["table","pierfitC","deces"]}),
+   s:P("Jean","Couzy","1923–1958",{st:"rec",facts:["Born 9 Jul 1923, Nérac","Polytechnicien (X42), military aeronautical engineer","Annapurna expedition 1950","First ascent of Makalu with Lionel Terray, 15 May 1955","Killed by rockfall on the Crête des Bergers (Dévoluy), 2 Nov 1958"],src:["couzy","jr"]}),
+   c:[{p:P("Guillemette","Couzy",null),s:P("—","Lorrain",null),c:[{p:P("Cyril","Lorrain",null),s:P("Marine","Dubois-Roussel",null),c:[{p:P("Rachel","Lorrain",null)},{p:P("Anouk","Lorrain",null)}]},{p:P("Johan","Lorrain",null)},{p:P("Philippine","Lorrain",null)}]},
+      {p:P("Claire","Couzy",null),s:P("—","de Ipanema",null),c:[{p:P("Alexis","de Ipanema",null)},{p:P("Romain","de Ipanema",null)}]},
+      {p:P("Agnès","Couzy",null,{st:"rec",facts:["Climber and author of mountain books"],src:["glenat","wall"]}),
+       c:[{uc:1,p:P("Claire","Mizrahi",null,{st:"unc",facts:["The wall groups the Mizrahi children with Lise's grandchildren without naming their parent; placed under Agnès as a guess"]})},{uc:1,p:P("Marine","Mizrahi",null,{st:"unc"})},{uc:1,p:P("Manon","Mizrahi",null,{st:"unc"})}]},
+      {p:P("Bertrand","Couzy",null)}]}
+ ]};
+
+const ottenheimer={p:P("Thérèse","de Gail","1891–1969",{st:"rec",src:["table","pierfitCl","wall"]}),s:P("Jean","Ottenheimer",null),
+ c:[{p:P("Philippe","Ottenheimer de Gail",null),c:["Guislaine","Laurence","Odile","Domitille"].map(g=>({p:P(g,null,null)}))},
+    {p:P("André-Jean","Ottenheimer de Gail",null),c:["Isabelle","Catherine","Patricia"].map(g=>({p:P(g,null,null)}))},
+    {p:P("Bertrand","Ottenheimer de Gail",null),c:["Bruno","Alain","Pascal","Benoît","Xavier","Thomas"].map(g=>({p:P(g,null,null)}))},
+    {p:P("Anne","Ottenheimer de Gail",null),s:P("André","Laure",null),c:[{p:P("Corinne","Laure",null)},{p:P("Hélène","Laure",null)},
+      {p:P("Christian","Laure",null),c:[{p:P("Thibault",null,null)},{p:P("Anna",null,null)},{p:P("Maya",null,null)}]},
+      {p:P("Marie-Pierre “Mapie”","Laure",null)},{p:P("Stéphane","Laure",null)}]}]};
+
+const elise={p:P("Élise","Lamort","1854–1923",{st:"rec",full:"Élise (Elisabeth) Lamort",facts:["The wall gives 1854–1913; the printout and records give 1854–1923"],src:["table","pierfitCl","wall"]}),
+ s:P("Charles","de Gail","1846–1920",{st:"rec",facts:["Chevalier de la Légion d'honneur (1901)","Son of Joseph André de Gail (1790–1882)"],src:["table","pierfitCl"]}),
+ c:[{p:P("Marie","de Gail","1877–1968",{st:"rec",src:["table","pierfitCl","wall"]}),s:P("M.","Lejoyant",null)},
+    ernestClaire,
+    {p:P("André","de Gail","1884–1914",{st:"rec",src:["table","pierfitCl","wall"]})},
+    ottenheimer]};
+
+const wilhelm={p:P("Juliette","Clarens",null),s:P("Auguste","Wilhelm",null),
+ c:[{p:P("Robert",null,null),c:[{p:P("Patricia",null,null),c:[{p:P("Florian",null,null)},{p:P("Claire",null,null)}]},{p:P("Carine",null,null),c:[{p:P("Daliane ?",null,null,{st:"unc",facts:["Name hard to read on the wall"]})},{p:P("Nathan",null,null)}]},{p:P("Laurence",null,null)}]},
+    {p:P("Marion",null,null)},{p:P("Éveline",null,null)}]};
+
+const julesMB={
+ p:P("Jules Sigisbert","Lamort","1817–1899",{st:"rec",facts:["Brother of Léon and of Jacques (1805–1867)"],src:["table","pierfitCl","wall"]}),
+ s:P("Marie-Barbe","Pondrom","1827–1906",{st:"rec",facts:["Daughter of Jean Bernard Pondrom and Thérèse de Hoefnagel","Links the Pondrom and Lamort families"],src:["table","pierfitCl","wall"]}),
+ c:[elise,
+    {p:P("Thérèse Léopoldine","Lamort","1849–1936",{src:T2}),s:P("Lucien","Boppe",null,{facts:["Wall note: “ag. Betzie Pondrom”"]})},
+    {p:P("Paul","Lamort","1851–1854",{src:T2,facts:["Died aged 3"]})},
+    {p:P("Paul","Lamort","1858–1916",{src:T2}),s:P("Félicie","Thilges",null),
+     c:[{p:P("Marguerite “Bonnibou”","Lamort",null),s:P("Jean-Pierre","Clarens",null),c:[{p:P("Josette","Clarens",null)},wilhelm]},
+        {p:P("Jules","Lamort",null),s:P("Mathilde","Winkler",null)}]}]};
+
+const treeB={
+ p:P("Jacques","Lamort","1785–1856",{st:"rec",facts:["Founder of the Senningen paper mill (Luxembourg)"],src:["table","vdl"]}),
+ s:P("Marie Françoise","Brusseaux","1786–1863",{src:["table"]}),
+ c:[{p:P("Fanny","Lamort","1815–1891",{src:["table"]})},
+    {p:P("Charles Claude","Lamort","1822–1896",{src:["table"]})},
+    {p:P("Léon","Lamort","1819–1872",{st:"rec",full:"Sigisbert Léon Lamort",facts:["Ran the Senningen paper mill; co-founded the Hauts Fourneaux de Luxembourg","Chamber of Commerce 1862–1872","Records list Eugène, Marie, Maurice, Lucien and Léon as his children. Your family sources place Eugène, Marie and Maurice under his brother Jacques instead"],src:["table","vdl","pierfit"]}),
+     s:P("Julie","Pescatore","1822–1890",{st:"rec",full:"Marie-Barbe Julie Pescatore",facts:["Married Léon in 1843"],src:["vdl"]})},
+    {key:"jacq2",p:P("Jacques","Lamort","1805–1867",{src:T2}),s:P("Marie-Catherine","Wellenstein","1813–1891",{src:T2}),
+     c:[{p:P("Marie","Lamort","1847–",{src:T2})},{p:P("Maurice","Lamort","1850–1928",{src:T2})},
+        {key:"eugene",p:P("Eugène","Lamort","1844–1918",{st:"unc",full:"Eugène Jacques Lamort",facts:["Father of Ernest","Parentage conflict: the wall and the printout make him a son of Jacques (1805–1867) and Marie-Catherine Wellenstein; Geneanet and the Lamort-Pescatore tomb make him a son of Léon and Julie Pescatore","Either way Ernest and Claire were second cousins"],src:["table","wall","pierfit","vdl"]}),
+         s:P("Marie Clémentine","Feltz","1845–1928",{src:["table","pierfit"]}),
+         c:[{p:P("Jeanne","Lamort","1870–1914",{src:["table"]})},{p:P("Marie-Caroline","Lamort","1872–1941",{src:["table"]})},{p:P("Marguerite","Lamort","1874–1953",{src:["table"]})},
+            {p:P("Marcel","Lamort","1880–1961",{src:["table","lu"],facts:["Industrialist at Vitry-le-François with his brother Ernest"]})},{p:P("Lucie","Lamort","1887–1951",{src:["table"]})}]}]},
+    julesMB]};
+
+/* ---------- Jean Bernard Pondrom & Thérèse de Hoefnagel ---------- */
+const treeA={key:"pondrom",
+ p:P("Jean Bernard","Pondrom","1780–1853",{src:T2}),
+ s:P("Thérèse","de Hoefnagel","1782–1867",{facts:["Heiress of Schutbourg castle (Luxembourg) in 1820","Daughter of Albert Joseph de Hoefnagel"],src:T2}),
+ c:[{p:P("Bernard Joseph","Pondrom","1821–1886",{src:T2})},
+    {p:P("André","Pondrom","–1854",{src:T2})},
+    {p:P("Jean-Baptiste","Pondrom","1825–1884",{src:T2,facts:["Emigrated to the USA (St. Louis)","The wall gives 1830–1884; the printout gives 1825–1884","A business card of L. G. Pondrom, Vice President of the Federal Reserve Bank of Dallas, is kept with his card"]}),
+     s:P("Marie Eugénie","Chomeau","1837–1926",{facts:["Born in Paris"]}),
+     c:[{p:P("Joseph","Pondrom",null),s:P("Catherine","Shaw",null)},
+        {p:P("J.-B. Jr “Battie”","Pondrom",null),s:P("Tep","Drye",null),
+         c:[{p:P("Girard “Ponzi”","Pondrom",null,{facts:["In the 1956 Vitry-le-François photo and the 1971 rue La Fontaine photo"]}),s:P("Geneviève “Guin”","Miller",null),
+            c:[{p:P("Lee Girard","Pondrom",null),s:P("Cyrena",null,null)},
+               {p:P("Mary Ann","Pondrom",null,{facts:["Visited Vitry-le-François in 1956","Hosted Agnès Couzy and France Magnan in Dallas, 1972"]}),s:P("Robert","Allday",null),
+                c:[{p:P("Meghan","Allday",null)},{p:P("Robin","Allday",null,{st:"unc",facts:["Named in a photo caption; may be a spouse rather than a child"]})},{p:P("Gwen","Allday",null)}]}]}]},
+        {p:P("Henri","Pondrom",null)},{p:P("Minnie","Pondrom",null)},{p:P("Adèle","Pondrom",null)},
+        {p:P("J. Andrew","Pondrom","1867–"),s:P("Philo","Eaga ?",null,{st:"unc"}),c:[{p:P("Margaret","Pondrom",null),s:P("Samson","P.",null)}]},
+        {p:P("Walter","Pondrom",null,{facts:["No descendants (“SP” on the wall)"]})},
+        {p:P("Marie-Thérèse","Pondrom",null),s:P("Henry","Gil","1858–1925")},
+        {p:P("Francis","Pondrom","1878–"),s:P("Margaret","MacGanen",null)}]}]};
+
+/* ---------- layout ---------- */
+const CW=144,CH=60,SG=22,HG=14,VG=96,ROW=CH+VG,NS="http://www.w3.org/2000/svg";
+const world=document.getElementById("world");
+const people=[],keys={};let uid=0;
+const nw=n=>n.s?CW*2+SG:CW;
+function measure(n){n.w=nw(n);n.cw=n.c?n.c.reduce((a,c)=>a+measure(c),0)+HG*(n.c.length-1):0;n.tw=Math.max(n.w,n.cw);return n.tw}
+function place(n,x,y){n.x=x+n.tw/2;n.y=y;if(n.c){let cx=x+(n.tw-n.cw)/2;n.c.forEach(c=>{place(c,cx,y+ROW);cx+=c.tw+HG})}}
+const leftX=n=>n.x-(CW+SG)/2,rightX=n=>n.x+(CW+SG)/2;
+const bloodX=n=>!n.s?n.x:(n.anchor==="s"?rightX(n):leftX(n));
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||world).appendChild(e);return e}
+const eL=document.createElementNS(NS,"g"),cL=document.createElementNS(NS,"g");world.append(eL,cL);
+function card(per,cx,y){
+  per.id=uid++;per.cx=cx;per.cy=y;people[per.id]=per;
+  const g=el("g",{class:"card "+per.st,"data-id":per.id,transform:`translate(${cx-CW/2},${y})`,tabindex:0,role:"button","aria-label":fullName(per)},cL);
+  el("rect",{width:CW,height:CH,rx:5},g);
+  const ty=per.sn?21:26;
+  const nm=el("text",{x:10,y:ty,class:"nm"},g);nm.textContent=per.g;
+  if(per.g.length>15)nm.setAttribute("textLength",CW-20),nm.setAttribute("lengthAdjust","spacingAndGlyphs");
+  if(per.sn){const s=el("text",{x:10,y:ty+13,class:"sn"},g);s.textContent=per.sn;if(per.sn.length>20)s.setAttribute("textLength",CW-20),s.setAttribute("lengthAdjust","spacingAndGlyphs")}
+  if(per.d)el("text",{x:10,y:CH-9,class:"dt"},g).textContent=per.d;
+  if(per.mpf)el("text",{x:CW-9,y:CH-9,class:"mpf","text-anchor":"end"},g).textContent="MPF";
+}
+function path(d,cls){return el("path",{class:"edge"+(cls?" "+cls:""),d},eL)}
+function draw(n,parent){
+  if(n.key)keys[n.key]=n;
+  n.parent=parent;
+  if(n.s){el("line",{class:"edge",x1:leftX(n)+CW/2,x2:rightX(n)-CW/2,y1:n.y+CH/2,y2:n.y+CH/2},eL);
+    el("text",{x:n.x,y:n.y+CH/2-5,class:"inf","text-anchor":"middle"},eL).textContent="∞";
+    card(n.p,leftX(n),n.y);card(n.s,rightX(n),n.y);n.p.node=n;n.s.node=n;}
+  else{card(n.p,n.x,n.y);n.p.node=n}
+  if(n.c){const sy=n.y+(n.s?CH/2:CH),my=n.y+CH+VG/2,xs=n.c.map(bloodX);
+    path(`M${n.x},${sy}V${my}`);path(`M${Math.min(...xs,n.x)},${my}H${Math.max(...xs,n.x)}`);
+    n.c.forEach(c=>{path(`M${bloodX(c)},${my}V${c.y}`,c.uc?"unc":"");draw(c,n)})}
+}
+measure(treeB);measure(treeA);
+place(treeB,0,0);place(treeA,treeB.tw+160,0);
+draw(treeB);draw(treeA);
+
+// Marie-Barbe also hangs from the Pondrom couple
+const mb=julesMB.s,midA=ROW-VG/2;
+path(`M${Math.min(...treeA.c.map(bloodX))},${midA}H${mb.cx}V${mb.cy}`);
+// Ernest hangs from Eugène, crossing to his marriage with Claire
+const eu=keys.eugene,ern=ernestClaire.p,midE=eu.y+CH+VG/2,lane=midE+20;
+path(`M${eu.x},${midE}V${lane}H${ern.cx}V${ern.cy}`,"lane");
+el("text",{x:eu.x+10,y:lane-6,class:"lbl"},eL).textContent="Ernest → married his second cousin Claire";
+
+// Hoefnagel ancestors above Thérèse
+const th=treeA.s,ax=th.cx;
+const albert=P("Albert Joseph","de Hoefnagel","1733–1802",{facts:["Father of Thérèse"]});
+const alex=P("Alexandre Joseph","de Hoefnagel",null,{st:"unc",facts:["Placed above Albert Joseph on the wall; exact link not drawn"]});
+const claireU=P("Claire","d'Uytenbroeck",null,{st:"unc",facts:["Heiress of Schutbourg (wall label)"]});
+const balth=P("Balthasar","de Hoefnagel","1549–1608",{st:"unc",facts:["Died in Mechelen (Malines)","Earlier ancestor; generations in between are not on the wall"]});
+const charl=P("Charlotte","de Iserin",null,{st:"unc",facts:["Wall: “Charlotte de Iserin ép. Claude de Humyn”; placement in the line not shown"]});
+const humyn=P("Claude","de Humyn",null,{st:"unc"});
+card(albert,ax,-ROW);path(`M${ax},${-ROW+CH}V${th.cy}`);
+const acx=ax+(CW+SG)/2;
+el("line",{class:"edge",x1:acx-SG/2,x2:acx+SG/2,y1:-2*ROW+CH/2,y2:-2*ROW+CH/2},eL);
+card(alex,acx-(CW+SG)/2,-2*ROW);card(claireU,acx+(CW+SG)/2,-2*ROW);
+path(`M${acx},${-2*ROW+CH/2}V${-ROW-VG/2}H${ax}V${-ROW}`,"unc");
+card(balth,ax-40,-3*ROW);path(`M${ax-40},${-3*ROW+CH}V${-2*ROW}`,"dot");
+el("text",{x:ax-30,y:-2*ROW-VG/2,class:"lbl"},eL).textContent="… generations";
+const ccx=ax+330;el("line",{class:"edge",x1:ccx-SG/2,x2:ccx+SG/2,y1:-3*ROW+CH/2,y2:-3*ROW+CH/2},eL);
+card(charl,ccx-(CW+SG)/2,-3*ROW);card(humyn,ccx+(CW+SG)/2,-3*ROW);
+el("text",{x:ax-60,y:-3*ROW-30,class:"band"},eL).textContent="Hoefnagel · Schutbourg";
+el("text",{x:treeB.x-200,y:-40,class:"band"},eL).textContent="Lamort · Senningen";
+el("text",{x:treeA.c[2].x-260,y:ROW-40,class:"band"},eL).textContent="Pondrom · Saint-Louis & Dallas";
+
+/* ---------- pan / zoom ---------- */
+const vp=document.getElementById("vp");
+let T={x:0,y:0,k:1};
+const apply=()=>world.setAttribute("transform",`translate(${T.x},${T.y}) scale(${T.k})`);
+function zoomAt(f,px,py){const k=Math.min(3,Math.max(.01,T.k*f));f=k/T.k;T.x=px-(px-T.x)*f;T.y=py-(py-T.y)*f;T.k=k;apply()}
+function fit(){const b=world.getBBox(),r=vp.getBoundingClientRect(),k=Math.min(r.width/(b.width+60),r.height/(b.height+60),1.2);
+  T.k=k;T.x=(r.width-b.width*k)/2-b.x*k;T.y=(r.height-b.height*k)/2-b.y*k;apply()}
+function focus(per,k=.8){const r=vp.getBoundingClientRect();T.k=k;T.x=r.width/2-per.cx*k;T.y=r.height*.35-(per.cy+CH/2)*k;apply()}
+const ptrs=new Map();let moved=0,last=null;
+vp.addEventListener("pointerdown",e=>{if(e.target.closest(".ctl,#sheet"))return;vp.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;vp.classList.add("drag");last=null});
+vp.addEventListener("pointermove",e=>{if(!ptrs.has(e.pointerId))return;const p=ptrs.get(e.pointerId);
+  if(ptrs.size===1){T.x+=e.clientX-p.x;T.y+=e.clientY-p.y;moved+=Math.abs(e.clientX-p.x)+Math.abs(e.clientY-p.y);apply()}
+  p.x=e.clientX;p.y=e.clientY;
+  if(ptrs.size===2){const[a,b]=[...ptrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y),r=vp.getBoundingClientRect(),mx=(a.x+b.x)/2-r.left,my=(a.y+b.y)/2-r.top;
+    if(last){zoomAt(d/last.d,mx,my);T.x+=mx-last.mx;T.y+=my-last.my;apply()}last={d,mx,my};moved=99}});
+function up(e){if(!ptrs.has(e.pointerId))return;ptrs.delete(e.pointerId);last=null;if(!ptrs.size)vp.classList.remove("drag");
+  if(moved<6&&!ptrs.size){const c=document.elementFromPoint(e.clientX,e.clientY)?.closest(".card");if(c)show(+c.dataset.id)}}
+vp.addEventListener("pointerup",up);vp.addEventListener("pointercancel",up);
+vp.addEventListener("wheel",e=>{e.preventDefault();const r=vp.getBoundingClientRect();zoomAt(Math.exp(-e.deltaY*.0015),e.clientX-r.left,e.clientY-r.top)},{passive:false});
+const ctr=()=>{const r=vp.getBoundingClientRect();return[r.width/2,r.height/2]};
+document.getElementById("zin").onclick=()=>zoomAt(1.3,...ctr());
+document.getElementById("zout").onclick=()=>zoomAt(1/1.3,...ctr());
+document.getElementById("zfit").onclick=fit;
+world.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){const c=e.target.closest(".card");if(c){e.preventDefault();show(+c.dataset.id)}}});
+
+/* ---------- details ---------- */
+const sheet=document.getElementById("sheet"),sin=document.getElementById("sheetIn");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function fullName(p){if(p.full)return p.full;const g=p.g.replace(/ \?$/,"");return p.sn?`${g} ${p.sn}`:`${g} Lamort de Gail`}
+function srcHTML(k){const[s,u]=SRC[k];return u?`<a href="${u}" target="_blank" rel="noopener">${esc(s)}</a>`:esc(s)}
+function relatives(p){const n=p.node,out=[];
+  if(n.s)out.push(["Spouse",n.p===p?n.s:n.p]);
+  const par=n.parent; if(par&&(n.p===p&&n.anchor!=="s"||n.s===p&&n.anchor==="s"))out.push(["Parents",par.p]);
+  if(p===mb)out.push(["Parents",treeA.p]);
+  if(p===ern)out.push(["Parents",eu.p]);
+  (n.c||[]).forEach(c=>out.push(["Child",c.p]));return out}
+function show(id){const p=people[id];
+  document.querySelectorAll(".card.sel").forEach(c=>c.classList.remove("sel"));
+  cL.querySelector(`[data-id="${id}"]`).classList.add("sel");
+  const tag=p.st==="rec"?'<span class="tg rec">Found in public records</span>':p.st==="unc"?'<span class="tg unc">Unclear or conflicting</span>':'<span class="tg">From family sources</span>';
+  const rel=relatives(p);
+  sin.innerHTML=`<h2>${esc(fullName(p))}</h2>${p.d?`<div class="d">${esc(p.d)}</div>`:""}
+   <div class="tags">${tag}${p.mpf?'<span class="tg mp">Mort pour la France</span>':""}</div>
+   ${p.facts?`<ul>${p.facts.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>`:""}
+   ${rel.length?`<div class="rel">${rel.map(([r,q])=>`<button data-go="${q.id}">${r}: ${esc(q.g.replace(/ \?$/,""))}</button>`).join("")}</div>`:""}
+   <div class="src">Sources: ${(p.src||[]).map(srcHTML).join(" · ")}</div>`;
+  sheet.hidden=false}
+sin.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(b){const q=people[+b.dataset.go];focus(q,Math.max(T.k,.6));show(q.id)}});
+document.getElementById("close").onclick=()=>{sheet.hidden=true;document.querySelectorAll(".card.sel").forEach(c=>c.classList.remove("sel"))};
+
+/* ---------- search + branch chips ---------- */
+const dl=document.getElementById("names"),byLabel={};
+people.forEach(p=>{if(p.g==="—"||p.g==="?")return;let lab=fullName(p)+(p.d?` (${p.d})`:"");while(byLabel[lab])lab+=" ";byLabel[lab]=p;
+  const o=document.createElement("option");o.value=lab;dl.appendChild(o)});
+const q=document.getElementById("q");
+function go(p){focus(p);show(p.id);const c=cL.querySelector(`[data-id="${p.id}"]`);c.classList.add("hl");setTimeout(()=>c.classList.remove("hl"),1600)}
+q.addEventListener("change",()=>{const p=byLabel[q.value]||people.find(x=>fullName(x).toLowerCase().includes(q.value.trim().toLowerCase()));if(p){go(p);q.blur()}});
+[["Ernest & Claire",ern],["Claude",ernestClaire.c[0].p],["Marc",ernestClaire.c[1].p],["Lise & Couzy",ernestClaire.c[3].p],["Ottenheimer",ottenheimer.p],["Clarens",wilhelm.p],["Jacques 1785",treeB.p],["Hoefnagel",th],["Pondrom USA",treeA.c[2].p]]
+ .forEach(([t,p])=>{const b=document.createElement("button");b.textContent=t;b.onclick=()=>go(p);document.getElementById("chips").appendChild(b)});
+
+requestAnimationFrame(()=>focus(ern,.55));
+</script>
+
+</body></html>
