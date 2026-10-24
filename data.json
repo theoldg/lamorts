@@ -176,7 +176,7 @@
                          {"p":{"g":"Étienne","x":"m"},
                           "c":[
                            {"p":{"g":"Noé","x":"m"}}]},
-                         {"p":{"g":"Vincent","x":"m"},"s":{"g":"Agnieszka","sn":"Jurczak","x":"f"},
+                         {"p":{"g":"Vincent","x":"m"},"s":{"g":"Agnieszka","sn":"Jurczak","x":"f","d":"née en 1970","facts":["Née le 11 février 1970","En vie"]},
                           "c":[
                            {"p":{"g":"Théodore","x":"m"}},
                            {"p":{"g":"Clémentine","x":"f"}},
