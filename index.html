@@ -38,6 +38,10 @@ header{display:flex;flex-direction:column;gap:10px;padding:12px max(16px,env(saf
 .top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 h1{font:600 1.4rem var(--f-name);margin:0;letter-spacing:.01em}
 .sub{color:var(--muted);font-size:.8rem}
+.theme{margin-left:auto;align-self:center;width:36px;height:36px;border-radius:50%;border:1px solid var(--cardline);background:var(--paper);cursor:pointer;display:grid;place-items:center}
+.theme:hover{border-color:var(--accent)}
+.theme svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.theme .sun{display:none}.dark .theme .sun{display:inline}.dark .theme .moon{display:none}
 .tools{display:flex;gap:10px;align-items:center;min-width:0}
 .search{position:relative;flex:none}
 .search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2}
@@ -123,7 +127,8 @@ h1{font:600 1.4rem var(--f-name);margin:0;letter-spacing:.01em}
 </head>
 <body>
 <header>
-  <div class="top"><h1>Lamort de Gail</h1><span class="sub" id="sub"></span></div>
+  <div class="top"><h1>Lamort de Gail</h1><span class="sub" id="sub"></span>
+    <button id="theme" class="theme" aria-label="Switch to dark mode" title="Switch to dark mode"><svg viewBox="0 0 24 24"><path class="moon" d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/><g class="sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg></button></div>
   <div class="tools">
     <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" list="names" placeholder="Find a person…" autocomplete="off" aria-label="Find a person"></label>
@@ -459,6 +464,14 @@ q.addEventListener("change",()=>{const v=q.value.trim().toLowerCase();if(!v)retu
 [["Ernest & Claire",ern],["Claude",ernestClaire.c[0].p],["Marc",ernestClaire.c[1].p],["Lise & Couzy",ernestClaire.c[3].p],["Ottenheimer",ottenheimer.p],["Clarens",wilhelm.p],["Jacques 1785",treeB.p],["Hoefnagel",th],["Pondrom USA",treeA.c[2].p]]
  .forEach(([t,p])=>{const b=document.createElement("button");b.className=`f-${fam(p)}`;b.style.setProperty("--c",`var(--${fam(p)})`);b.innerHTML=`<i></i>${esc(t)}`;b.onclick=()=>{if(p.node.c)p.node.open=true;go(p)};document.getElementById("chips").appendChild(b)});
 document.getElementById("sub").textContent=`${people.filter(p=>p.g!=="—").length} people · tap a card for details, tap ± to fold a branch`;
+
+/* ---------- theme ---------- */
+const root=document.documentElement,mq=matchMedia("(prefers-color-scheme: dark)"),tb=document.getElementById("theme");
+function setTheme(t){if(t)root.dataset.theme=t;const dark=t?t==="dark":mq.matches;root.classList.toggle("dark",dark);
+  const l=`Switch to ${dark?"light":"dark"} mode`;tb.setAttribute("aria-label",l);tb.title=l}
+try{setTheme(localStorage.getItem("theme"))}catch(e){setTheme(null)}
+mq.addEventListener("change",()=>{if(!root.dataset.theme)setTheme(null)});
+tb.onclick=()=>{const t=root.classList.contains("dark")?"light":"dark";setTheme(t);try{localStorage.setItem("theme",t)}catch(e){}};
 
 render();
 requestAnimationFrame(()=>focus(ern,.8,1));
