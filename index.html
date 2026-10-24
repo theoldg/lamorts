@@ -222,20 +222,21 @@ const treeA={key:"pondrom",
         {p:P("Marie-Thérèse","Pondrom",null),s:P("Henry","Gil","1858–1925")},
         {p:P("Francis","Pondrom","1878–"),s:P("Margaret","MacGanen",null)}]}]};
 
-/* ---------- layout ---------- */
-const CW=144,CH=60,SG=22,HG=14,VG=96,ROW=CH+VG,NS="http://www.w3.org/2000/svg";
+/* ---------- layout: time runs left to right ---------- */
+const CW=144,CH=60,SG=22,HG=12,CG=96,COL=CW+CG,NS="http://www.w3.org/2000/svg";
 const world=document.getElementById("world");
 const people=[],keys={};let uid=0;
-const nw=n=>n.s?CW*2+SG:CW;
-function measure(n){n.w=nw(n);n.cw=n.c?n.c.reduce((a,c)=>a+measure(c),0)+HG*(n.c.length-1):0;n.tw=Math.max(n.w,n.cw);return n.tw}
-function place(n,x,y){n.x=x+n.tw/2;n.y=y;if(n.c){let cx=x+(n.tw-n.cw)/2;n.c.forEach(c=>{place(c,cx,y+ROW);cx+=c.tw+HG})}}
-const leftX=n=>n.x-(CW+SG)/2,rightX=n=>n.x+(CW+SG)/2;
-const bloodX=n=>!n.s?n.x:(n.anchor==="s"?rightX(n):leftX(n));
+const nb=n=>n.s?CH*2+SG:CH;
+function measure(n){n.w=nb(n);n.cw=n.c?n.c.reduce((a,c)=>a+measure(c),0)+HG*(n.c.length-1):0;n.tw=Math.max(n.w,n.cw);return n.tw}
+function place(n,x,y){n.x=x;n.y=y+n.tw/2;if(n.c){let cy=y+(n.tw-n.cw)/2;n.c.forEach(c=>{place(c,x+COL,cy);cy+=c.tw+HG})}}
+const topY=n=>n.y-(CH+SG)/2,botY=n=>n.y+(CH+SG)/2;
+const bloodY=n=>!n.s?n.y:(n.anchor==="s"?botY(n):topY(n));
 function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||world).appendChild(e);return e}
 const eL=document.createElementNS(NS,"g"),cL=document.createElementNS(NS,"g");world.append(eL,cL);
-function card(per,cx,y){
-  per.id=uid++;per.cx=cx;per.cy=y;people[per.id]=per;
-  const g=el("g",{class:"card "+per.st,"data-id":per.id,transform:`translate(${cx-CW/2},${y})`,tabindex:0,role:"button","aria-label":fullName(per)},cL);
+// x = left edge, my = vertical centre; per.cx/per.cy = centre x / top y
+function card(per,x,my){
+  per.id=uid++;per.cx=x+CW/2;per.cy=my-CH/2;people[per.id]=per;
+  const g=el("g",{class:"card "+per.st,"data-id":per.id,transform:`translate(${x},${my-CH/2})`,tabindex:0,role:"button","aria-label":fullName(per)},cL);
   el("rect",{width:CW,height:CH,rx:5},g);
   const ty=per.sn?21:26;
   const nm=el("text",{x:10,y:ty,class:"nm"},g);nm.textContent=per.g;
@@ -245,49 +246,49 @@ function card(per,cx,y){
   if(per.mpf)el("text",{x:CW-9,y:CH-9,class:"mpf","text-anchor":"end"},g).textContent="MPF";
 }
 function path(d,cls){return el("path",{class:"edge"+(cls?" "+cls:""),d},eL)}
+function couple(x,my,a,b){const mx=x+CW/2;
+  el("line",{class:"edge",x1:mx,x2:mx,y1:my-SG/2,y2:my+SG/2},eL);
+  el("text",{x:mx-8,y:my+5,class:"inf","text-anchor":"end"},eL).textContent="∞";
+  card(a,x,my-(CH+SG)/2);card(b,x,my+(CH+SG)/2)}
 function draw(n,parent){
   if(n.key)keys[n.key]=n;
   n.parent=parent;
-  if(n.s){el("line",{class:"edge",x1:leftX(n)+CW/2,x2:rightX(n)-CW/2,y1:n.y+CH/2,y2:n.y+CH/2},eL);
-    el("text",{x:n.x,y:n.y+CH/2-5,class:"inf","text-anchor":"middle"},eL).textContent="∞";
-    card(n.p,leftX(n),n.y);card(n.s,rightX(n),n.y);n.p.node=n;n.s.node=n;}
+  if(n.s){couple(n.x,n.y,n.p,n.s);n.p.node=n;n.s.node=n}
   else{card(n.p,n.x,n.y);n.p.node=n}
-  if(n.c){const sy=n.y+(n.s?CH/2:CH),my=n.y+CH+VG/2,xs=n.c.map(bloodX);
-    path(`M${n.x},${sy}V${my}`);path(`M${Math.min(...xs,n.x)},${my}H${Math.max(...xs,n.x)}`);
-    n.c.forEach(c=>{path(`M${bloodX(c)},${my}V${c.y}`,c.uc?"unc":"");draw(c,n)})}
+  if(n.c){const sx=n.x+(n.s?CW/2:CW),jx=n.x+CW+CG/2,ys=n.c.map(bloodY);
+    path(`M${sx},${n.y}H${jx}`);path(`M${jx},${Math.min(...ys,n.y)}V${Math.max(...ys,n.y)}`);
+    n.c.forEach(c=>{path(`M${jx},${bloodY(c)}H${c.x}`,c.uc?"unc":"");draw(c,n)})}
 }
 measure(treeB);measure(treeA);
-place(treeB,0,0);place(treeA,treeB.tw+160,0);
+place(treeB,0,0);place(treeA,0,treeB.tw+160);
 draw(treeB);draw(treeA);
 
 // Marie-Barbe also hangs from the Pondrom couple
-const mb=julesMB.s,midA=ROW-VG/2;
-path(`M${Math.min(...treeA.c.map(bloodX))},${midA}H${mb.cx}V${mb.cy}`);
+const mb=julesMB.s,jA=treeA.x+CW+CG/2;
+path(`M${jA},${Math.min(...treeA.c.map(bloodY))}V${mb.cy+CH/2}H${mb.cx-CW/2}`);
 // Ernest hangs from Eugène, crossing to his marriage with Claire
-const eu=keys.eugene,ern=ernestClaire.p,midE=eu.y+CH+VG/2,lane=midE+20;
-path(`M${eu.x},${midE}V${lane}H${ern.cx}V${ern.cy}`,"lane");
-el("text",{x:eu.x+10,y:lane-6,class:"lbl"},eL).textContent="Ernest → married his second cousin Claire";
+const eu=keys.eugene,ern=ernestClaire.p,lane=eu.x+CW+CG/2+20,ernY=ern.cy+CH/2;
+path(`M${eu.x+CW/2},${eu.y}H${lane}V${ernY}H${ern.cx-CW/2}`,"lane");
+const lm=(eu.y+ernY)/2;
+el("text",{x:lane+6,y:lm,class:"lbl","text-anchor":"middle",transform:`rotate(90 ${lane+6} ${lm})`},eL).textContent="Ernest → married his second cousin Claire";
 
-// Hoefnagel ancestors above Thérèse
-const th=treeA.s,ax=th.cx;
+// Hoefnagel ancestors to the left of Thérèse
+const th=treeA.s,thY=th.cy+CH/2,X=k=>treeA.x-k*COL;
 const albert=P("Albert Joseph","de Hoefnagel","1733–1802",{facts:["Father of Thérèse"]});
 const alex=P("Alexandre Joseph","de Hoefnagel",null,{st:"unc",facts:["Placed above Albert Joseph on the wall; exact link not drawn"]});
 const claireU=P("Claire","d'Uytenbroeck",null,{st:"unc",facts:["Heiress of Schutbourg (wall label)"]});
 const balth=P("Balthasar","de Hoefnagel","1549–1608",{st:"unc",facts:["Died in Mechelen (Malines)","Earlier ancestor; generations in between are not on the wall"]});
 const charl=P("Charlotte","de Iserin",null,{st:"unc",facts:["Wall: “Charlotte de Iserin ép. Claude de Humyn”; placement in the line not shown"]});
 const humyn=P("Claude","de Humyn",null,{st:"unc"});
-card(albert,ax,-ROW);path(`M${ax},${-ROW+CH}V${th.cy}`);
-const acx=ax+(CW+SG)/2;
-el("line",{class:"edge",x1:acx-SG/2,x2:acx+SG/2,y1:-2*ROW+CH/2,y2:-2*ROW+CH/2},eL);
-card(alex,acx-(CW+SG)/2,-2*ROW);card(claireU,acx+(CW+SG)/2,-2*ROW);
-path(`M${acx},${-2*ROW+CH/2}V${-ROW-VG/2}H${ax}V${-ROW}`,"unc");
-card(balth,ax-40,-3*ROW);path(`M${ax-40},${-3*ROW+CH}V${-2*ROW}`,"dot");
-el("text",{x:ax-30,y:-2*ROW-VG/2,class:"lbl"},eL).textContent="… generations";
-const ccx=ax+330;el("line",{class:"edge",x1:ccx-SG/2,x2:ccx+SG/2,y1:-3*ROW+CH/2,y2:-3*ROW+CH/2},eL);
-card(charl,ccx-(CW+SG)/2,-3*ROW);card(humyn,ccx+(CW+SG)/2,-3*ROW);
-el("text",{x:ax-60,y:-3*ROW-30,class:"band"},eL).textContent="Hoefnagel · Schutbourg";
-el("text",{x:treeB.x-200,y:-40,class:"band"},eL).textContent="Lamort · Senningen";
-el("text",{x:treeA.c[2].x-260,y:ROW-40,class:"band"},eL).textContent="Pondrom · Saint-Louis & Dallas";
+card(albert,X(1),thY);path(`M${X(1)+CW},${thY}H${treeA.x}`);
+const acy=thY+(CH+SG)/2;couple(X(2),acy,alex,claireU);
+path(`M${X(2)+CW/2},${acy}H${X(1)-CG/2}V${thY}H${X(1)}`,"unc");
+card(balth,X(3),thY);path(`M${X(3)+CW},${thY}H${X(2)}`,"dot");
+el("text",{x:X(3)+CW+6,y:thY-6,class:"lbl"},eL).textContent="… generations";
+couple(X(3),thY+200,charl,humyn);
+el("text",{x:X(3),y:thY-70,class:"band"},eL).textContent="Hoefnagel · Schutbourg";
+el("text",{x:-40,y:treeB.y+15,class:"band","text-anchor":"end"},eL).textContent="Lamort · Senningen";
+el("text",{x:-40,y:treeA.y-treeA.tw/2+60,class:"band","text-anchor":"end"},eL).textContent="Pondrom · Saint-Louis & Dallas";
 
 /* ---------- pan / zoom ---------- */
 const vp=document.getElementById("vp");
@@ -296,7 +297,7 @@ const apply=()=>world.setAttribute("transform",`translate(${T.x},${T.y}) scale($
 function zoomAt(f,px,py){const k=Math.min(3,Math.max(.01,T.k*f));f=k/T.k;T.x=px-(px-T.x)*f;T.y=py-(py-T.y)*f;T.k=k;apply()}
 function fit(){const b=world.getBBox(),r=vp.getBoundingClientRect(),k=Math.min(r.width/(b.width+60),r.height/(b.height+60),1.2);
   T.k=k;T.x=(r.width-b.width*k)/2-b.x*k;T.y=(r.height-b.height*k)/2-b.y*k;apply()}
-function focus(per,k=.8){const r=vp.getBoundingClientRect();T.k=k;T.x=r.width/2-per.cx*k;T.y=r.height*.35-(per.cy+CH/2)*k;apply()}
+function focus(per,k=.8){const r=vp.getBoundingClientRect();T.k=k;T.x=r.width/2-per.cx*k;T.y=r.height/2-(per.cy+CH/2)*k;apply()}
 const ptrs=new Map();let moved=0,last=null;
 vp.addEventListener("pointerdown",e=>{if(e.target.closest(".ctl,#sheet"))return;vp.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;vp.classList.add("drag");last=null});
 vp.addEventListener("pointermove",e=>{if(!ptrs.has(e.pointerId))return;const p=ptrs.get(e.pointerId);
