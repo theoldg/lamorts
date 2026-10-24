@@ -173,15 +173,15 @@
                        {"p":{"g":"Bruno","x":"m","full":"Bruno Marie Noël Lamort de Gail","d":"†","st":"rec","src":["deces","mldg","wall"]}},
                        {"p":{"g":"Alain","x":"m","full":"Alain Marie Lamort de Gail","d":"†","st":"rec","src":["deces","wall"]},
                         "c":[
-                         {"p":{"g":"Étienne","x":"m"},
+                         {"p":{"g":"Étienne","x":"m","d":"né en 1966","facts":["Né le 24 juillet 1966"]},
                           "c":[
                            {"p":{"g":"Noé","x":"m"}}]},
-                         {"p":{"g":"Vincent","x":"m"},"s":{"g":"Agnieszka","sn":"Jurczak","x":"f","d":"née en 1970","facts":["Née le 11 février 1970","En vie"]},
+                         {"p":{"g":"Vincent","x":"m","d":"né en 1967","facts":["Né le 7 décembre 1967"]},"s":{"g":"Agnieszka","sn":"Jurczak","x":"f","d":"née en 1970","facts":["Née le 11 février 1970","En vie"]},
                           "c":[
-                           {"p":{"g":"Théodore","x":"m"}},
-                           {"p":{"g":"Clémentine","x":"f"}},
-                           {"p":{"g":"Eustache","x":"m"}},
-                           {"p":{"g":"Lucie","x":"f"}}]}]},
+                           {"p":{"g":"Théodore","x":"m","d":"né en 1999","facts":["Né le 5 août 1999"]}},
+                           {"p":{"g":"Clémentine","x":"f","d":"née en 2002","facts":["Née le 18 février 2002"]}},
+                           {"p":{"g":"Eustache","x":"m","d":"né en 2004","facts":["Né le 29 février 2004"]}},
+                           {"p":{"g":"Lucie","x":"f","d":"née en 2013","facts":["Née le 27 juin 2013"]}}]}]},
                        {"p":{"g":"Bénédicte","x":"f"},
                         "c":[
                          {"p":{"g":"Loïc","sn":"Mondet","x":"m"}}]},
