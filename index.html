@@ -55,8 +55,8 @@ h1{font:600 1.4rem var(--f-name);margin:0;letter-spacing:.01em}
 .edge{fill:none;stroke:var(--line);stroke-width:1.5;transition:opacity .2s}
 .edge.unc{stroke:var(--unc);stroke-dasharray:5 4}
 .edge.dot{stroke-dasharray:2 5;stroke-width:1.8}
-.edge.lane{stroke:var(--link);stroke-dasharray:7 5;stroke-width:1.8}
 .lbl{font:italic 11.5px var(--f-ui);fill:var(--link)}
+.jump{cursor:pointer}.jump text{font:500 11.5px var(--f-ui);fill:var(--link)}.jump:hover text{text-decoration:underline}
 .cpl{fill:var(--couple);transition:opacity .2s}
 .band{font:italic 500 46px var(--f-name);fill:var(--muted);opacity:.28}
 
@@ -292,6 +292,11 @@ const alexN={p:alex,s:claireU},charlN={p:charl,s:humyn};reg(alex,alexN);reg(clai
 const mb=julesMB.s,ern=ernestClaire.p,eu=keys.eugene,th=treeA.s;
 function xlink(par,kid){par.forEach(q=>(q.xkids=q.xkids||[]).push(kid));(kid.xpar=kid.xpar||[]).push(...par)}
 xlink([treeA.p,treeA.s],mb);xlink([eu.p,eu.s],ern);xlink([albert],th);xlink([alex,claireU],albert);
+// these are shown as jump links next to the cards rather than long lines across the tree
+ernestClaire.noteTop=["↑ Ernest: son of Eugène Lamort",eu.p];
+eu.noteTop=["↓ son Ernest m. Claire de Gail",ern];
+julesMB.noteBot=["↓ Marie-Barbe: parents Pondrom",treeA.p];
+treeA.noteTop=["↑ daughter Marie-Barbe m. Jules",mb];
 
 const spouse=p=>{const n=p.node;return n.s?(n.p===p?n.s:n.p):null};
 function parents(p){const n=p.node,out=[];if(n.parent&&blood(n)===p){out.push(n.parent.p);if(n.parent.s)out.push(n.parent.s)}return out.concat(p.xpar||[])}
@@ -313,9 +318,10 @@ const CW=184,CH=64,SG=10,PAD=6,HG=18,CG=84,COL=CW+CG,NS="http://www.w3.org/2000/
 const world=document.getElementById("world");
 const eL=document.createElementNS(NS,"g"),cL=document.createElementNS(NS,"g"),tL=document.createElementNS(NS,"g");world.append(eL,cL,tL);
 const kids=n=>n.c&&n.open!==false?n.c:null;
-const nb=n=>n.s?CH*2+SG+2*PAD:CH;
+const NH=22,nt=n=>n.noteTop?NH:0,nbt=n=>n.noteBot?NH:0;
+const nb=n=>(n.s?CH*2+SG+2*PAD:CH)+nt(n)+nbt(n);
 function measure(n){const k=kids(n);n.cw=k?k.reduce((a,c)=>a+measure(c),0)+HG*(k.length-1):0;n.tw=Math.max(nb(n),n.cw);return n.tw}
-function place(n,x,y){n.x=x;n.y=y+n.tw/2;const k=kids(n);if(k){let cy=y+(n.tw-n.cw)/2;k.forEach(c=>{place(c,x+COL,cy);cy+=c.tw+HG})}}
+function place(n,x,y){n.x=x;n.y=y+n.tw/2+(nt(n)-nbt(n))/2;const k=kids(n);if(k){let cy=y+(n.tw-n.cw)/2;k.forEach(c=>{place(c,x+COL,cy);cy+=c.tw+HG})}}
 const topY=n=>n.y-(CH+SG)/2,botY=n=>n.y+(CH+SG)/2;
 const bloodY=n=>!n.s?n.y:(n.anchor==="s"?botY(n):topY(n));
 const inX=n=>n.x-(n.s?PAD:0),outX=n=>n.x+CW+(n.s?PAD:0);
@@ -346,20 +352,24 @@ function toggle(n){const open=n.open!==false,t=open?"−":"+"+n.cnt,w=open?20:14
     "aria-label":`${open?"Fold":"Unfold"} descendants of ${fullName(n.p)}`},tL);
   el("title",{},g).textContent=open?"Fold this branch":`Show ${n.cnt} more`;
   el("rect",{x:-w/2,y:-10,width:w,height:20,rx:10},g);el("text",{y:4,"text-anchor":"middle"},g).textContent=t;
-  return cx}
+  return cx+w/2}
 function draw(n){
   if(n.s)couple(n.x,n.y,n.p,n.s);else card(n.p,n.x,n.y);
-  if(n.c){const tx=toggle(n),k=kids(n);if(k)k.forEach(c=>{curve(tx+10,n.y,inX(c),bloodY(c),c.uc?"unc":"");draw(c)})}
+  const h=(n.s?CH+SG/2+PAD:CH/2);
+  if(n.noteTop)note(n.x,n.y-h-7,...n.noteTop);
+  if(n.noteBot)note(n.x,n.y+h+15,...n.noteBot);
+  if(n.c){const tr=toggle(n),k=kids(n);if(!k)return;
+    // one trunk per family, at a fixed spot in the gap between generations
+    const jx=n.x+CW+CG-22,ys=k.map(bloodY);
+    path(`M${tr},${n.y}H${jx}`);path(`M${jx},${Math.min(...ys,n.y)}V${Math.max(...ys,n.y)}`);
+    k.forEach(c=>{path(`M${jx},${bloodY(c)}H${inX(c)}`,c.uc?"unc":"");draw(c)})}
 }
+function note(x,y,t,target){const g=el("g",{class:"jump","data-id":target.id,tabindex:0,role:"link","aria-label":t.slice(2)},tL);
+  el("title",{},g).textContent="Go to "+fullName(target);el("text",{x:x+4,y},g).textContent=t}
 function render(){
   eL.textContent=cL.textContent=tL.textContent="";people.forEach(p=>p.vis=0);
   measure(treeB);measure(treeA);place(treeB,0,0);place(treeA,0,treeB.tw+140);
   draw(treeB);draw(treeA);
-  // Marie-Barbe also hangs from the Pondrom couple
-  if(mb.vis)curve(outX(treeA),treeA.y,mb.cx-CW/2-PAD,mb.cy+CH/2,"lane");
-  // Ernest hangs from Eugène, crossing to his marriage with Claire
-  if(eu.p.vis&&ern.vis){curve(outX(eu),eu.y,ern.cx-CW/2-PAD,ern.cy+CH/2,"lane").id="laneE";
-    const t=el("text",{class:"lbl",dy:-6},eL),tp=el("textPath",{href:"#laneE",startOffset:"50%","text-anchor":"middle"},t);tp.textContent="Ernest → married his second cousin Claire"}
   // Hoefnagel ancestors
   const thY=th.cy+CH/2,X=k=>treeA.x-k*COL,acy=thY+(CH+SG)/2;
   card(albert,X(1),thY);curve(X(1)+CW,thY,inX(treeA),thY);
@@ -396,7 +406,7 @@ vp.addEventListener("pointermove",e=>{if(!ptrs.has(e.pointerId))return;const p=p
     if(last){zoomAt(d/last.d,mx,my);T.x+=mx-last.mx;T.y+=my-last.my;apply()}last={d,mx,my};moved=99}});
 function up(e){if(!ptrs.has(e.pointerId))return;ptrs.delete(e.pointerId);last=null;if(!ptrs.size)vp.classList.remove("drag");
   if(moved<6&&!ptrs.size)activate(document.elementFromPoint(e.clientX,e.clientY))}
-function activate(t){const tg=t?.closest(".tog");if(tg)return flip(nodes[+tg.dataset.nid]);
+function activate(t){const j=t?.closest(".jump");if(j)return go(people[+j.dataset.id]);const tg=t?.closest(".tog");if(tg)return flip(nodes[+tg.dataset.nid]);
   const c=t?.closest(".card");if(c)show(+c.dataset.id);else if(t?.closest("#svg"))closeSheet()}
 vp.addEventListener("pointerup",up);vp.addEventListener("pointercancel",up);
 vp.addEventListener("wheel",e=>{e.preventDefault();const r=vp.getBoundingClientRect();zoomAt(Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),e.clientX-r.left,e.clientY-r.top)},{passive:false});
