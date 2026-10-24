@@ -176,7 +176,7 @@
                          {"p":{"g":"Étienne","x":"m"},
                           "c":[
                            {"p":{"g":"Noé","x":"m"}}]},
-                         {"p":{"g":"Vincent","x":"m"},
+                         {"p":{"g":"Vincent","x":"m"},"s":{"g":"Agnieszka","sn":"Jurczak","x":"f"},
                           "c":[
                            {"p":{"g":"Théodore","x":"m"}},
                            {"p":{"g":"Clémentine","x":"f"}},
