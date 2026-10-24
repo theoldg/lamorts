@@ -275,9 +275,9 @@ function draw(n){
     path(`M${tr},${n.y}H${jx}`);path(`M${jx},${Math.min(...ys,n.y)}V${Math.max(...ys,n.y)}`);
     k.forEach(c=>{path(`M${jx},${bloodY(c)}H${inX(c)}`,c.uc?"unc":"");draw(c)})}
 }
-// a child drawn in another branch: branch off the family's outermost child line, run down a lane
-// between the trunk and the next column, and enter the child's card; a halo breaks any line it crosses
-function xline(par,kid,ky){if(!par.p.vis||!kid.vis)return;const k=kids(par),lx=par.x+COL-28,x2=kid.cx-CW/2-PAD;let y1,d;
+// a child drawn in another branch: prolong the family's trunk up or down to the child's card;
+// a halo breaks any line it crosses
+function xline(par,kid,ky){if(!par.p.vis||!kid.vis)return;const k=kids(par),lx=par.x+COL-62,x2=kid.cx-CW/2-PAD;let y1,d;
   if(k){const ys=k.map(bloodY);y1=ky<par.y?Math.min(...ys):Math.max(...ys);d=`M${lx},${y1}`}
   else{y1=par.y;d=`M${par.tr},${y1}H${lx}`}
   const s=Math.sign(ky-y1);if(Math.abs(ky-y1)>24)path(`M${lx},${y1+s*10}V${ky-s*10}`,"halo");
