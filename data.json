@@ -341,16 +341,5 @@
  {"parents":["eugene","feltz"],"child":"ernest"},
  {"parents":["albert"],"child":"thh"},
  {"parents":["alex","claireU"],"child":"albert"},
- {"parents":["pondromF","servais"],"child":"jbp"}],
-"shortcuts":[
- ["Ernest & Claire","ernest"],
- ["Claude","claude"],
- ["Marc","marc"],
- ["Lise & Couzy","lise"],
- ["Ottenheimer","thgail"],
- ["Clarens","juliette"],
- ["Jacques 1785","jacques"],
- ["Rémy 1591","remy"],
- ["Hoefnagel","thh"],
- ["Pondrom USA","jbp2"]]
+ {"parents":["pondromF","servais"],"child":"jbp"}]
 }
