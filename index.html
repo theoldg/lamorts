@@ -39,6 +39,11 @@ header{display:flex;flex-direction:column;gap:10px;padding:12px max(16px,env(saf
 #q{margin-left:auto;align-self:center}
 h1{font:600 1.4rem var(--f-name);margin:0;letter-spacing:.01em}
 .sub{color:var(--muted);font-size:.8rem}
+.mail{align-self:center;display:flex;align-items:center;gap:7px;height:36px;padding:0 13px 0 11px;border-radius:99px;border:1px solid var(--cardline);background:var(--paper);color:var(--ink);font:500 13px var(--f-ui);text-decoration:none;white-space:nowrap}
+.mail:hover{border-color:var(--accent)}
+.mail svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linejoin:round}
+.fix{margin:14px 0;padding:10px 12px;border-radius:10px;background:var(--chip);font-size:.84rem;line-height:1.5}
+.fix a{color:var(--accent);font-weight:500;white-space:nowrap}
 .theme{align-self:center;width:36px;height:36px;border-radius:50%;border:1px solid var(--cardline);background:var(--paper);cursor:pointer;display:grid;place-items:center}
 .theme:hover{border-color:var(--accent)}
 .theme svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -145,13 +150,14 @@ h1{font:600 1.4rem var(--f-name);margin:0;letter-spacing:.01em}
 .search.cmp{width:100%}
 @media (max-width:640px){#relbar{left:64px;right:12px;transform:none;width:auto;max-width:none;flex-direction:column;align-items:flex-start;gap:8px}}
 .close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:0;background:var(--chip);font-size:15px;cursor:pointer}
-@media (max-width:640px){#q{order:3;width:100%;margin:0}.theme{margin-left:auto}.legend{display:none}.sub{display:none}}
+@media (max-width:640px){#q{order:3;width:100%;margin:0}.theme{margin-left:auto}.legend{display:none}.sub{display:none}.mail{margin-left:auto;padding:0;width:36px;justify-content:center}.mail span{display:none}.mail+.theme{margin-left:0}}
 </style>
 </head>
 <body>
 <header>
   <div class="top"><h1>Lamort de Gail</h1><span class="sub" id="sub"></span>
     <button class="search" id="q"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Rechercher une personne…</button>
+    <a id="mail" class="mail" title="Signaler une erreur ou envoyer un complément"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6 8.5 7 8.5-7"/></svg><span>Corrections et compléments</span></a>
     <button id="theme" class="theme" aria-label="Passer en mode sombre" title="Passer en mode sombre"><svg viewBox="0 0 24 24"><path class="moon" d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/><g class="sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg></button></div>
 </header>
 <div id="vp">
@@ -191,6 +197,9 @@ tb.onclick=()=>{const t=root.classList.contains("dark")?"light":"dark";setTheme(
 let D;
 try{D=await fetch("data.json").then(r=>{if(!r.ok)throw Error(r.status);return r.json()})}
 catch(e){document.getElementById("sub").textContent="Impossible de charger data.json. Ouvrez cette page par un serveur web, pas comme un fichier.";throw e}
+// mailto link for corrections, with the subject (and the person concerned) filled in
+const mailto=p=>`mailto:${D.contact}?subject=${encodeURIComponent("Arbre Lamort de Gail"+(p?" : "+fullName(p):""))}`+(p?`&body=${encodeURIComponent(`Au sujet ${de(fullName(p))}${p.d?` (${p.d})`:""} :\n\n`)}`:"");
+document.getElementById("mail").href=mailto();
 const SRC=D.sources,[lam,pon]=D.trees;
 
 /* ---------- model ---------- */
@@ -361,6 +370,7 @@ function show(id){const p=people[id],had=!sheet.hidden;sel=p;lin=lineage(p);appl
    ${p.facts?`<ul>${p.facts.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>`:""}
    ${group("Parents",parents(p))}${group(sp?cap(G(EP,sp.x)):"",sp?[sp]:[])}${group("Enfants",children(p))}
    <h3>Lien de parenté</h3><button class="search cmp" id="cmp"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Lien ${esc(de(given(p)))} avec…</button>
+   <div class="fix">Une erreur, une date ou un nom à ajouter ? Écrivez à <a href="${mailto(p)}">${esc(D.contact)}</a>.</div>
    <div class="src">Sources : ${(p.src||[]).map(srcHTML).join(" · ")}</div>`;
   sheet.hidden=false;sheet.scrollTop=0;
   // keep the person in view once the panel opens

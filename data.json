@@ -1,4 +1,5 @@
 {
+"contact":"teodor.lamort@gmail.com",
 "about":"Arbre de la famille Lamort de Gail. Chaque personne : g = prénom(s), sn = nom affiché sur la fiche (les enfants héritent de celui de leur parent s'il manque), x = sexe (m ou f ; absent si incertain), full = nom complet, d = dates, st = rec (archives publiques) | unc (incertain ou contradictoire), sinon sources familiales ; src = clés des sources (par défaut : wall) ; facts = notes. Chaque famille : p et s = le couple, c = les enfants, anchor = s quand le conjoint est le parent par le sang, uc = lien incertain avec les parents, csn = nom que prennent les enfants, fold = replié dans la vue par défaut.",
 "sources":{
   "wall":["Arbre mural de la famille (photos, oct. 2026)",null],
